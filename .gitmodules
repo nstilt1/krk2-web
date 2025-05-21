@@ -1,0 +1,4 @@
+[submodule "ksp"]
+	path = ksp
+	url = https://github.com/nstilt1/Kerbal-Rocket-Kalculator-2-Electric-Boogaloo
+	branch = realism-overhaul

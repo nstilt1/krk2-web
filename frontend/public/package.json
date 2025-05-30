@@ -1,0 +1,15 @@
+{
+  "name": "ksp",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "ksp_bg.wasm",
+    "ksp.js",
+    "ksp.d.ts"
+  ],
+  "main": "ksp.js",
+  "types": "ksp.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

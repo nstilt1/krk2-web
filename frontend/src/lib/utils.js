@@ -7,6 +7,6 @@ export function cn(...inputs) {
 
 export function debug(str) {
   if (true) {
-    console.debug(str);
+    console.log(str);
   }
 }

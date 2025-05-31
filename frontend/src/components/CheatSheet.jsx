@@ -87,7 +87,7 @@ const CheatSheet = ({
                 noseHeight,
             );
             console.timeEnd("rocket_table");
-            console.log(json);
+            debug("json = " + json);
 
             setResult(json);
             //console.log(data);

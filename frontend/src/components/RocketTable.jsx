@@ -18,11 +18,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { debug } from '@/lib/utils'
 
-// ──────────────────────────────────────────────
-// 1) Make sure the column “accessorKey” names match
-//    exactly the keys you put on each object below.
-// ──────────────────────────────────────────────
-export const columns = [
+const columns = [
   { accessorKey: 'deltaVVac',    header: 'ΔV (Vac)',        sortingFn: 'basic' },
   { accessorKey: 'deltaVAsl',    header: 'ΔV (ASL)',        sortingFn: 'basic' },
   { accessorKey: 'mass',         header: 'Mass',            sortingFn: 'basic' },
@@ -34,7 +30,7 @@ export const columns = [
   { accessorKey: 'nose_length',  header: 'Nose Length' },
   { accessorKey: 'nose_fuselage',header: 'Nose Fuselage' },
   { accessorKey: 'twr',          header: 'TWR',             sortingFn: 'basic' },
-]
+];
 
 export default function RocketTable({ wasmJsonData }) {
   const [data, setData] = useState([])
@@ -44,16 +40,12 @@ export default function RocketTable({ wasmJsonData }) {
     try {
       debug('Parsing wasm JSON…')
       const parsed = JSON.parse(wasmJsonData).map(r => ({
-        // ──────────────────────────────────
-        // 2) Return a plain object (not [ { … } ]), AND
-        //    use EXACTLY the same key names as your columns:
-        // ──────────────────────────────────
         deltaVVac:    r.deltaVVac,
         deltaVAsl:    r.deltaVAsl,
-        mass:         r.wetMass,           // “mass” matches accessorKey: 'mass'
+        mass:         r.wetMass,
         diameter:     r.diameter,
         engine:       r.engine,
-        num_tanks:    r.numEngines,        // “num_tanks” matches accessorKey: 'num_tanks'
+        num_tanks:    r.numEngines,
         cyl_length:   r.cylLength   ?? 'N/A',
         cyl_fuselage: r.cylFuselage ?? 'N/A',
         nose_length:  r.noseLength  ?? '0',
@@ -70,7 +62,6 @@ export default function RocketTable({ wasmJsonData }) {
   const table = useReactTable({
     data,
     columns,
-    // Only control the “mass” filter via filterValue:
     state: {
       columnFilters: [{ id: 'mass', value: filterValue }],
     },
@@ -92,13 +83,13 @@ export default function RocketTable({ wasmJsonData }) {
       />
 
       <Table>
-        <TableHead>
+        <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
             // One <TableRow> per headerGroup (you’ll have exactly one group in a flat table)
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map(header => (
                 // One <TableHeader> (i.e. <th>) per column in that group
-                <TableHeader
+                <TableHead
                   key={header.id}
                   onClick={header.column.getToggleSortingHandler()}
                 >
@@ -106,11 +97,11 @@ export default function RocketTable({ wasmJsonData }) {
                     header.column.columnDef.header,
                     header.getContext()
                   )}
-                </TableHeader>
+                </TableHead>
               ))}
             </TableRow>
           ))}
-        </TableHead>
+        </TableHeader>
 
         <TableBody>
           {table.getRowModel().rows.map(row => (

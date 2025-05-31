@@ -177,7 +177,26 @@ const Calculate = ({
                   </p>
                 </TooltipContent>
               </Tooltip>
+              </TooltipProvider>
+            {useNosecone && (
+              <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <NumberInput 
+                    value={noseHeight}
+                    onChange={setNoseHeight}
+                    id="noseHeight"
+                    label="Enter the nosecone's height in meters:"
+                  />
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    The nosecone height for this stage.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
             </TooltipProvider>
+            )}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild className="w-full text-left"><div>

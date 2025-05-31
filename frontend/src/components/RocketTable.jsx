@@ -1,95 +1,112 @@
-import { useEffect, useState } from "react";
-import { useReactTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel } from "@tanstack/react-table";
 import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-
-/*
-const data = [
-    { id: 1, deltaVVac: 1000, deltaVAsl: 800, mass: 2.5 },
-    { id: 2, deltaVVac: 1500, deltaVAsl: 1200, mass: 3.0 },
-    { id: 3, deltaVVac: 2000, deltaVAsl: 1800, mass: 4.2 },
-];
-*/
+import React, { useState, useEffect } from 'react'
+import {
+  useReactTable,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  flexRender,
+} from '@tanstack/react-table'
+import { debug } from "@/lib/utils";
 
 export const columns = [
-    { accessorKey: "deltaVVac", header: "ΔV (Vac)", sortingFn: "basic" },
-    { accessorKey: "deltaVAsl", header: "ΔV (ASL)", sortingFn: "basic" },
-    { accessorKey: "mass", header: "Mass", sortingFn: "basic" },
-    { accessorKey: "diameter", header: "Diameter", filterFn: "includesString" }, // Filterable
-    { accessorKey: "engine", header: "Engine", filterFn: "includesString" }, // Filterable
-    { accessorKey: "num_tanks", header: "# Tanks", filterFn: "includesString" },
-    { accessorKey: "cyl_length", header: "Cylinder Length" }, // No sorting or filtering
-    { accessorKey: "nose_length", header: "Nose Length" }, // No sorting or filtering
-    { accessorKey: "cyl_fuselage", header: "Cylinder Fuselage" },
-    { accessorKey: "nose_fuselage", header: "Nose Fuselage" },
-    { accessorKey: "twr", header: "TWR", sortingFn: "basic" },
-];
-
+  { accessorKey: 'deltaVVac',    header: 'ΔV (Vac)',        sortingFn: 'basic' },
+  { accessorKey: 'deltaVAsl',    header: 'ΔV (ASL)',        sortingFn: 'basic' },
+  { accessorKey: 'wetMass',         header: 'Wet Mass',            sortingFn: 'basic' },
+  { accessorKey: 'diameter',     header: 'Diameter',        filterFn: 'includesString' },
+  { accessorKey: 'engine',       header: 'Engine',          filterFn: 'includesString' },
+  { accessorKey: 'numEngines',    header: '# Tanks',         filterFn: 'includesString' },
+  { accessorKey: 'cylLength',   header: 'Cylinder Length' },
+  { accessorKey: 'cylFuselage', header: 'Cylinder Fuselage' },
+  { accessorKey: 'noseLength',  header: 'Nose Length' },
+  { accessorKey: 'noseFuselage',header: 'Nose Fuselage' },
+  { accessorKey: 'twr',          header: 'TWR',             sortingFn: 'basic' },
+]
 
 export default function RocketTable({ wasmJsonData }) {
-    const [data, setData] = useState([]);
-    const [filterValue, setFilterValue] = useState("");
+  const [data, setData] = useState([])
+  const [filterValue, setFilterValue] = useState('')
 
-    useEffect(() => {
-        try {
-            const parsedData = JSON.parse(wasmJsonData).map((rocket) => ({
-                deltaVVac: rocket.delta_v_vac,
-                deltaVAsl: rocket.delta_v_asl,
-                mass: rocket.mass,
-                diameter: rocket.diameter.diameter,
-                engine: rocket.engine.name,
-                num_tanks: rocket.num_tanks,
-                cyl_length: rocket.cyl_length || "N/A",
-                cyl_fuselage: rocket.cyl_fuselage || "N/A",
-                nose_length: rocket.nose_length || "N/A",
-                nose_fuselage: rocket.nose_fuselage || "N/A",
-                twr: rocket.twr,
-            }));
-            setData(parsedData);
-        } catch (error) {
-            console.error("Error parsing WASM JSON data:", error);
-        }
-    }, [wasmJsonData]);
+  useEffect(() => {
+    try {
+      debug("Parsing json");
+      const parsed = JSON.parse(wasmJsonData).map(r => ([{
+        deltaVVac:    r.deltaVVac,
+        deltaVAsl:    r.deltaVAsl,
+        wetMass:         r.wetMass,
+        diameter:     r.diameter,
+        engine:       r.engine,
+        numEngines:    r.numEngines,
+        cylLength:   r.cylLength   ?? 'N/A',
+        cylFuselage: r.cylFuselage ?? 'N/A',
+        noseLength:  r.noseLength  ?? '0',
+        noseFuselage:r.noseFuselage?? 'N/A',
+        twr:          r.twr,
+      }]));
+      debug(parsed);
+      setData(parsed)
+    } catch (e) {
+      console.error('Error parsing WASM JSON data:', e)
+    }
+  }, [wasmJsonData])
 
+  const table = useReactTable({
+    data,
+    columns,
+    // Controlled filter state for the “mass” column only:
+    state: {
+      columnFilters: [{ id: 'mass', value: filterValue }],
+    },
+    onColumnFiltersChange: newFilters => {
+      // Extract the mass filter out of the newFilters array:
+      const massFilter = newFilters.find(f => f.id === 'mass')
+      setFilterValue(massFilter?.value ?? '')
+    },
+    getCoreRowModel:    getCoreRowModel(),
+    getFilteredRowModel:getFilteredRowModel(),
+    getSortedRowModel:  getSortedRowModel(),
+  })
 
-    const table = useReactTable({
-        data,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        state: { columnFilters: [{ id: "mass", value: filterValue }] },
-    });
+  return (
+    <>
+      <Input
+        placeholder="Filter by mass"
+        value={filterValue}
+        onChange={e => setFilterValue(e.target.value)}
+      />
 
-    return (
-        <div>
-            <Input
-                placeholder="Filter by mass"
-                value={filterValue}
-                onChange={(e) => setFilterValue(e.target.value)}
-            />
-            <Table>
-                <TableHead>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <TableHeader key={header.id} onClick={header.column.getToggleSortingHandler()}>
-                                    {header.column.columnDef.header}
-                                </TableHeader>
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableHead>
-                <TableBody>
-                    {table.getRowModel().rows.map((row) => (
-                        <TableRow key={row.id}>
-                            {row.getVisibleCells().map((cell) => (
-                                <TableCell key={cell.id}>{cell.renderValue()}</TableCell>
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </div>
-    );
+      <Table>
+        <TableHead>
+            {table.getHeaderGroups().map(headerGroup => (
+                <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                    <TableHeader
+                    key={header.id}
+                    onClick={header.column.getToggleSortingHandler()}
+                    >
+                    {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                    )}
+                    </TableHeader>
+                ))}
+                </TableRow>
+            ))}
+            </TableHead>
+
+        <TableBody>
+          {table.getRowModel().rows.map(row => (
+            <TableRow key={row.id}>
+              {row.getVisibleCells().map(cell => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </>
+  )
 }

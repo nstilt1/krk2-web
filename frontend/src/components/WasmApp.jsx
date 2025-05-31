@@ -34,6 +34,7 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
   const [useNosecone, setUseNosecone] = useLocalStorage("useNosecone", false);
   const [diameter, setDiameter] = useLocalStorage("diameter", 0.3);
   const [extraFuelPercentage, setExtraFuelPercentage] = useLocalStorage("extraFuel", 3.0);
+  const [noseHeight, setNoseHeight] = useLocalStorage("nose_height", 0.0);
 
   const handleTechNodeSelection = (option) => {
     if (techNodes.includes(option)) {
@@ -110,6 +111,8 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
                 setNeedsGimballing={setNeedsGimballing}
                 useNosecone={useNosecone}
                 setUseNosecone={setUseNosecone}
+                noseHeight={noseHeight}
+                setNoseHeight={setNoseHeight}
                 diameter={diameter}
                 setDiameter={setDiameter}
                 fuselageList={fuselageList}
@@ -134,6 +137,8 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
                 setMinimumTwr={setMinimumTwr}
                 useNosecone={useNosecone}
                 setUseNosecone={setUseNosecone}
+                noseHeight={noseHeight}
+                setNoseHeight={setNoseHeight}
                 needsGimballing={needsGimballing}
                 setNeedsGimballing={setNeedsGimballing}
                 unlockedFuselages={fuselages}

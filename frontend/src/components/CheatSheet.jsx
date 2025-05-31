@@ -22,6 +22,7 @@ import {
 } from "./ui/tooltip";
 import RocketTable from "./RocketTable";
 import NumberInput from "./NumberInput";
+import { debug } from "@/lib/utils";
 
 const CheatSheet = ({
     wasmModule,
@@ -74,7 +75,7 @@ const CheatSheet = ({
 
         try {
             console.time("rocket_table");
-            const json = wasmModule.max_dv(
+            const json = await wasmModule.max_dv(
                 mass,
                 inVacuum,
                 minimumTwr,
@@ -86,6 +87,7 @@ const CheatSheet = ({
                 noseHeight,
             );
             console.timeEnd("rocket_table");
+            console.log(json);
 
             setResult(json);
             //console.log(data);
@@ -133,6 +135,25 @@ const CheatSheet = ({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
+            {useNosecone && (
+              <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <NumberInput 
+                    value={noseHeight}
+                    onChange={setNoseHeight}
+                    id="noseHeight"
+                    label="Enter the nosecone height in meters:"
+                  />
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    The calculator will use this height for nosecones in this stage.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            )}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild className="w-full text-left"><div>

@@ -60,7 +60,7 @@ export const columns = [
   },
   {
     accessorKey: 'num_engines',
-    header: '# Engines',
+    header: '# Tanks',
   },
   {
     accessorKey: 'cyl_length',

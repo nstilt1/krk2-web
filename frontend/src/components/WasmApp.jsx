@@ -117,6 +117,8 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
                 setDiameter={setDiameter}
                 fuselageList={fuselageList}
                 techNodeList={techNodeList}
+                extraFuelPercentage={extraFuelPercentage}
+                setExtraFuelPercentage={setExtraFuelPercentage}
               />
               </CardContent>
               </Card>
@@ -142,12 +144,13 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
                 needsGimballing={needsGimballing}
                 setNeedsGimballing={setNeedsGimballing}
                 unlockedFuselages={fuselages}
-                handleChangeFuselages={handleFuselageSelection}
+                handleFuselageSelection={handleFuselageSelection}
                 unlockedTechNodes={techNodes}
-                handleChangeUnlockedTechNodes={handleTechNodeSelection}
+                handleTechNodeSelection={handleTechNodeSelection}
                 fuselageList={fuselageList}
                 techNodeList={techNodeList}
                 extraFuelPercentage={extraFuelPercentage}
+                setExtraFuelPercentage={setExtraFuelPercentage}
                 cpbRef={cpbRef}
               />
               </CardContent>

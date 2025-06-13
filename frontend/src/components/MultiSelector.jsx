@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const MultiSelect = ({ options, selectedOptions, setSelectedOptions }) => {
+const MultiSelect = ({ options, selectedOptions, setSelectedOptions, label }) => {
   return (
     <div className="flex flex-col">
       {options.map((option) => (
@@ -14,7 +14,7 @@ const MultiSelect = ({ options, selectedOptions, setSelectedOptions }) => {
           onClick={(event) => {
             event.preventDefault();
             setSelectedOptions(option);
-            }
+          }
         }
         >
           {option}

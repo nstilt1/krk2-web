@@ -45,6 +45,7 @@ const CheatSheet = ({
     fuselageList,
     techNodeList,
     extraFuelPercentage,
+    setExtraFuelPercentage,
     cpbRef
 }) => {
     const [result, setResult] = useState(null);
@@ -131,6 +132,23 @@ const CheatSheet = ({
                 <TooltipContent>
                   <p className="text-lg max-w-md">
                     The calculator will only output rocket parts that exceed this TWR.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <NumberInput 
+                    value={extraFuelPercentage}
+                    onChange={setExtraFuelPercentage}
+                    id="extraFuel"
+                    label="Enter how much extra fuel should be added to the rated burn time (%):"
+                  />
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    The calculator will use this many percent of fuel above or below the rated burn time.
                   </p>
                 </TooltipContent>
               </Tooltip>

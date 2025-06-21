@@ -3,6 +3,10 @@ import React, { useState } from "react";
 const MultiSelect = ({ options, selectedOptions, setSelectedOptions, label }) => {
   return (
     <div className="flex flex-col">
+      {label && (
+        <label className="mb-2 font-semibold text-gray-700">{label}</label>
+      )}
+
       {options.map((option) => (
         <button
           key={option}

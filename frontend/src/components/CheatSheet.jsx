@@ -54,6 +54,8 @@ const CheatSheet = ({
     const [chords, setChords] = useState([]);
     const [allChords, setAllChords] = useState([]);  
     const [showProbabilities, setShowProbabilities] = useLocalStorage("showProbability", false);
+    const [useCustomDiameter, setUseCustomDiameter] = useLocalStorage("useCustomDiameter", false);
+    const [customDiameter, setCustomDiameter] = useLocalStorage("customDiameter", 1.25);
 
     const handleShowProbabilitiesChange = () => {
         setShowProbabilities(!showProbabilities);
@@ -71,6 +73,10 @@ const CheatSheet = ({
         setUseNosecone(!useNosecone);
     }
 
+    const handleUseCustomDiameterChange = (event) => {
+      setUseCustomDiameter(!useCustomDiameter);
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -86,6 +92,8 @@ const CheatSheet = ({
                 unlockedTechNodes,
                 extraFuelPercentage,
                 noseHeight,
+                useCustomDiameter,
+                customDiameter,
             );
             console.timeEnd("rocket_table");
             debug("json = " + json);
@@ -228,6 +236,43 @@ const CheatSheet = ({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <input 
+                    type="checkbox"
+                    id="useCustomDiameter"
+                    checked={useCustomDiameter}
+                    onChange={handleUseCustomDiameterChange}
+                  />
+                  <label htmlFor="useNosecone">Do you want to use a custom payload/tank diameter?</label>
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    When checked, the calculator will use a custom tank diameter provided by the number input.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {useCustomDiameter && (
+              <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <NumberInput 
+                    value={customDiameter}
+                    onChange={setCustomDiameter}
+                    id="customDiameter"
+                    label="Enter the desired tank diameter in meters:"
+                  />
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    The calculator will use this diameter for the tanks in this stage.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            )}
                       <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild className="w-full text-left"><div>
@@ -264,7 +309,7 @@ const CheatSheet = ({
             </Tooltip>
           </TooltipProvider>
                 
-            <Button type="submit">Get Chords</Button>
+            <Button type="submit">Get Rockets</Button>
             {result && <div>
                 <RocketTable wasmJsonData={result} />
             </div>}

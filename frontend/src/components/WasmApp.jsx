@@ -58,9 +58,16 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
     "Early Rocketry",
     "Basic Rocketry",
     "1956-1957 Orbital Rocketry",
+    /*
     "1958 Orbital Rocketry",
     "1959 Orbital Rocketry",
     "1960 Orbital Rocketry",
+    */
+   "Lunar Landing",
+   "2009-2013 Orbital Rocketry",
+   "2014-2018 ORSC Engines",
+   "2014-2018 Orbital Rocketry",
+   "2019-2028 Orbital Rocketry",
   ];
 
   const fuselageList = [
@@ -78,10 +85,10 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
       {wasmModule ? 
         <div>
           <Tabs defaultValue="calculator">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="calculator">Calculator</TabsTrigger>
               <TabsTrigger value="cheat-sheet">Rocket Tables</TabsTrigger>
-              <TabsTrigger value="chord-finder">Chord Finder</TabsTrigger>
+              {/* <TabsTrigger value="chord-finder">Chord Finder</TabsTrigger> */}
             </TabsList>
             <TabsContent value="calculator">
               <Card>
@@ -156,7 +163,7 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
               </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value="chord-finder">
+            {/* <TabsContent value="chord-finder">
               <Card>
                 <CardHeader>
                   <CardTitle>Chord Finder</CardTitle>
@@ -181,10 +188,10 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
                     setTableScheme={setTableScheme}
                     tableSchemes={tableSchemes}
                     cpbRef={cpbRef}
-                  /> */}
+                  /> 
                 </CardContent>
               </Card>
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
           </div> : <p>Loading...</p>}
     </div>

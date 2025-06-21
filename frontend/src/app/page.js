@@ -40,6 +40,7 @@ export default function Home() {
         <WasmApp showExtraControls={clickedLogo} toggleExtraControls={() => {setClickedLogo(!clickedLogo)}} cpbRef={cpbRef} wasmModule={wasmModule}></WasmApp>
       </main>
       {showBuilder && <ChordProgressionBuilder ref={cpbRef} wasmModule={wasmModule} />}
+      {/*
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center p-8">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
@@ -95,6 +96,7 @@ export default function Home() {
           How this works →
         </a>
       </footer>
+      */}
     </div>
     </div>
   );

@@ -46,16 +46,17 @@ const CheatSheet = ({
     techNodeList,
     extraFuelPercentage,
     setExtraFuelPercentage,
-    cpbRef
+    cpbRef,
+    customDiameter,
+    setCustomDiameter,
+    handleUseCustomDiameterChange,
+    useCustomDiameter,
 }) => {
     const [result, setResult] = useState(null);
-
 
     const [chords, setChords] = useState([]);
     const [allChords, setAllChords] = useState([]);  
     const [showProbabilities, setShowProbabilities] = useLocalStorage("showProbability", false);
-    const [useCustomDiameter, setUseCustomDiameter] = useLocalStorage("useCustomDiameter", false);
-    const [customDiameter, setCustomDiameter] = useLocalStorage("customDiameter", 1.25);
 
     const handleShowProbabilitiesChange = () => {
         setShowProbabilities(!showProbabilities);
@@ -73,9 +74,6 @@ const CheatSheet = ({
         setUseNosecone(!useNosecone);
     }
 
-    const handleUseCustomDiameterChange = (event) => {
-      setUseCustomDiameter(!useCustomDiameter);
-    }
 
     const handleSubmit = async (event) => {
         event.preventDefault();

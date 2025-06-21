@@ -191,10 +191,25 @@ export default function RocketTable({ wasmJsonData }) {
     return Array.from(setOfDiam).sort((a, b) => a - b)
   }, [data])
 
-  const currentEngineFilter =
-    columnFilters.find((f) => f.id === 'engine')?.value ?? ''
-  const currentDiameterFilter =
-    columnFilters.find((f) => f.id === 'diameter')?.value ?? ''
+  const [currentEngineFilter, setCurrentEngineFilter] = useState('__all__');
+  const [currentDiameterFilter, setCurrentDiameterFilter] = useState('__all__');
+
+
+  const handleResetFilters = () => {
+    setColumnFilters((old) =>
+      old.filter(
+        (f) =>
+          f.id !== 'engine' &&
+          f.id !== 'diameter' &&
+          f.id !== 'wetMass'
+      )
+    );
+    setCurrentEngineFilter('__all__');
+    setCurrentDiameterFilter('__all__');
+    setMinWetMass('');
+    setMaxWetMass('');
+  };
+
 
   return (
     <div className="space-y-4">
@@ -208,6 +223,7 @@ export default function RocketTable({ wasmJsonData }) {
         <Select
           value={currentEngineFilter}
           onValueChange={(val) => {
+            setCurrentEngineFilter(val);
             if (val === '__all__') {
               setColumnFilters((old) => old.filter((f) => f.id !== 'engine'));
             } else {
@@ -244,6 +260,7 @@ export default function RocketTable({ wasmJsonData }) {
         <Select
           value={currentDiameterFilter}
           onValueChange={(val) => {
+            setCurrentDiameterFilter(val);
             if (val === '__all__') {
               setColumnFilters((old) => old.filter((f) => f.id !== 'diameter'));
             } else {
@@ -293,6 +310,14 @@ export default function RocketTable({ wasmJsonData }) {
         />
 
       </div>
+
+      <button
+        onClick={handleResetFilters}
+        className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+      >
+        Reset Filters
+      </button>
+
 
       <Table>
         <TableHeader>

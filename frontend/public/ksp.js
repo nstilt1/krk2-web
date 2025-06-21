@@ -127,14 +127,16 @@ function getDataViewMemory0() {
  * @param {Array<any>} unlocked_fuselages
  * @param {Array<any>} unlocked_tech
  * @param {number} nose_height
+ * @param {boolean} use_custom_diameter
+ * @param {number} custom_diameter
  * @returns {string}
  */
-export function calculate(mass, target_delta_v, minimum_twr, maximum_twr, in_vacuum, needs_gimballing, use_nosecone, diameter, unlocked_fuselages, unlocked_tech, nose_height) {
+export function calculate(mass, target_delta_v, minimum_twr, maximum_twr, in_vacuum, needs_gimballing, use_nosecone, diameter, unlocked_fuselages, unlocked_tech, nose_height, use_custom_diameter, custom_diameter) {
     let deferred2_0;
     let deferred2_1;
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        wasm.calculate(retptr, mass, target_delta_v, minimum_twr, maximum_twr, in_vacuum, needs_gimballing, use_nosecone, diameter, addHeapObject(unlocked_fuselages), addHeapObject(unlocked_tech), nose_height);
+        wasm.calculate(retptr, mass, target_delta_v, minimum_twr, maximum_twr, in_vacuum, needs_gimballing, use_nosecone, diameter, addHeapObject(unlocked_fuselages), addHeapObject(unlocked_tech), nose_height, use_custom_diameter, custom_diameter);
         var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
         var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
         var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);

@@ -35,6 +35,8 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
   const [diameter, setDiameter] = useLocalStorage("diameter", 0.3);
   const [extraFuelPercentage, setExtraFuelPercentage] = useLocalStorage("extraFuel", 3.0);
   const [noseHeight, setNoseHeight] = useLocalStorage("nose_height", 0.0);
+  const [customDiameter, setCustomDiameter] = useLocalStorage("customDiameter", 1.25);
+  const [useCustomDiameter, setUseCustomDiameter] = useLocalStorage("useCustomDiameter", false);
 
   const handleTechNodeSelection = (option) => {
     if (techNodes.includes(option)) {
@@ -80,6 +82,10 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
     "Steel Stir-Welded Tank"
   ];
 
+  const handleUseCustomDiameterChange = (event) => {
+    setUseCustomDiameter(!useCustomDiameter);
+  }
+
   return (
     <div>
       {wasmModule ? 
@@ -93,7 +99,7 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
             <TabsContent value="calculator">
               <Card>
                 <CardHeader>
-                  <CardTitle><span className="blend">&quot;</span>AI<span className="blend">&quot;</span> KSP Realism Overhaul Rocket Calculator</CardTitle>
+                  <CardTitle>KSP Realism Overhaul Rocket Calculator</CardTitle>
                 </CardHeader>
                 <CardContent>
               <Calculate
@@ -126,6 +132,10 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
                 techNodeList={techNodeList}
                 extraFuelPercentage={extraFuelPercentage}
                 setExtraFuelPercentage={setExtraFuelPercentage}
+                customDiameter={customDiameter}
+                setCustomDiameter={setCustomDiameter}
+                handleUseCustomDiameterChange={handleUseCustomDiameterChange}
+                useCustomDiameter={useCustomDiameter}
               />
               </CardContent>
               </Card>
@@ -159,6 +169,10 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
                 extraFuelPercentage={extraFuelPercentage}
                 setExtraFuelPercentage={setExtraFuelPercentage}
                 cpbRef={cpbRef}
+                customDiameter={customDiameter}
+                setCustomDiameter={setCustomDiameter}
+                handleUseCustomDiameterChange={handleUseCustomDiameterChange}
+                useCustomDiameter={useCustomDiameter}
               />
               </CardContent>
               </Card>

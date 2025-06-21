@@ -16,6 +16,7 @@ import {
   TooltipProvider, 
   TooltipTrigger 
 } from "./ui/tooltip";
+import RocketTable from "./RocketTable";
 
 const Calculate = ({ 
   wasmModule, 
@@ -45,6 +46,10 @@ const Calculate = ({
   setDiameter,
   fuselageList,
   techNodeList,
+  customDiameter,
+  setCustomDiameter,
+  handleUseCustomDiameterChange,
+  useCustomDiameter,
 }) => {
 
   const [result, setResult] = useState(null);
@@ -128,6 +133,8 @@ const Calculate = ({
         fuselages,
         techNodes,
         noseHeight,
+        useCustomDiameter,
+        customDiameter,
       );
       console.timeEnd("calculate");
       
@@ -139,7 +146,7 @@ const Calculate = ({
   };
 
   return (
-    <div className="max-w-md">
+    <div>
       <form onSubmit={handleSubmit}>
         <div>
         <div>
@@ -253,6 +260,43 @@ const Calculate = ({
                 <TooltipTrigger asChild className="w-full text-left"><div>
                   <input 
                     type="checkbox"
+                    id="useCustomDiameter"
+                    checked={useCustomDiameter}
+                    onChange={handleUseCustomDiameterChange}
+                  />
+                  <label htmlFor="useNosecone">Do you want to use a custom payload/tank diameter?</label>
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    When checked, the calculator will use a custom tank diameter provided by the number input.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {useCustomDiameter && (
+              <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <NumberInput 
+                    value={customDiameter}
+                    onChange={setCustomDiameter}
+                    id="customDiameter"
+                    label="Enter the desired tank diameter in meters:"
+                  />
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    The calculator will use this diameter for the tanks in this stage.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            )}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <input 
+                    type="checkbox"
                     id="inVacuum"
                     checked={inVacuum}
                     onChange={handleInVacuumChange}
@@ -348,7 +392,7 @@ const Calculate = ({
       {result &&
         <div>
       {/* Using the midi-player custom element for MIDI playback */}
-      <p>{result}</p>
+          <RocketTable wasmJsonData={result} />
       </div>
       }
       <SavedChords 

@@ -129,14 +129,17 @@ function getDataViewMemory0() {
  * @param {number} nose_height
  * @param {boolean} use_custom_diameter
  * @param {number} custom_diameter
+ * @param {number} extra_fuel_percentage
+ * @param {boolean} use_multiple_engines
+ * @param {number} max_num_engines
  * @returns {string}
  */
-export function calculate(mass, target_delta_v, minimum_twr, maximum_twr, in_vacuum, needs_gimballing, use_nosecone, diameter, unlocked_fuselages, unlocked_tech, nose_height, use_custom_diameter, custom_diameter) {
+export function calculate(mass, target_delta_v, minimum_twr, maximum_twr, in_vacuum, needs_gimballing, use_nosecone, diameter, unlocked_fuselages, unlocked_tech, nose_height, use_custom_diameter, custom_diameter, extra_fuel_percentage, use_multiple_engines, max_num_engines) {
     let deferred2_0;
     let deferred2_1;
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        wasm.calculate(retptr, mass, target_delta_v, minimum_twr, maximum_twr, in_vacuum, needs_gimballing, use_nosecone, diameter, addHeapObject(unlocked_fuselages), addHeapObject(unlocked_tech), nose_height, use_custom_diameter, custom_diameter);
+        wasm.calculate(retptr, mass, target_delta_v, minimum_twr, maximum_twr, in_vacuum, needs_gimballing, use_nosecone, diameter, addHeapObject(unlocked_fuselages), addHeapObject(unlocked_tech), nose_height, use_custom_diameter, custom_diameter, extra_fuel_percentage, use_multiple_engines, max_num_engines);
         var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
         var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
         var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
@@ -168,14 +171,16 @@ export function calculate(mass, target_delta_v, minimum_twr, maximum_twr, in_vac
  * @param {number} nose_height
  * @param {boolean} use_custom_diameter
  * @param {number} custom_diameter
+ * @param {boolean} use_multiple_engines
+ * @param {number} max_num_engines
  * @returns {string}
  */
-export function max_dv(mass, in_vacuum, minimum_twr, needs_gimballing, use_nosecone, unlocked_fuselages, unlocked_tech, extra_fuel_percentage, nose_height, use_custom_diameter, custom_diameter) {
+export function max_dv(mass, in_vacuum, minimum_twr, needs_gimballing, use_nosecone, unlocked_fuselages, unlocked_tech, extra_fuel_percentage, nose_height, use_custom_diameter, custom_diameter, use_multiple_engines, max_num_engines) {
     let deferred2_0;
     let deferred2_1;
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        wasm.max_dv(retptr, mass, in_vacuum, minimum_twr, needs_gimballing, use_nosecone, addHeapObject(unlocked_fuselages), addHeapObject(unlocked_tech), extra_fuel_percentage, nose_height, use_custom_diameter, custom_diameter);
+        wasm.max_dv(retptr, mass, in_vacuum, minimum_twr, needs_gimballing, use_nosecone, addHeapObject(unlocked_fuselages), addHeapObject(unlocked_tech), extra_fuel_percentage, nose_height, use_custom_diameter, custom_diameter, use_multiple_engines, max_num_engines);
         var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
         var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
         var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);

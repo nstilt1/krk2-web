@@ -50,6 +50,12 @@ const Calculate = ({
   setCustomDiameter,
   handleUseCustomDiameterChange,
   useCustomDiameter,
+  extraFuelPercentage,
+  setExtraFuelPercentage,
+  useMultipleEngines,
+  handleUseMultipleEnginesChange,
+  maxNumEngines,
+  setMaxNumEngines,
 }) => {
 
   const [result, setResult] = useState(null);
@@ -135,6 +141,9 @@ const Calculate = ({
         noseHeight,
         useCustomDiameter,
         customDiameter,
+        extraFuelPercentage,
+        useMultipleEngines,
+        maxNumEngines,
       );
       console.timeEnd("calculate");
       
@@ -287,6 +296,43 @@ const Calculate = ({
                 <TooltipContent>
                   <p className="text-lg max-w-md">
                     The calculator will use this diameter for the tanks in this stage.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            )}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <input 
+                    type="checkbox"
+                    id="useMultipleEngines"
+                    checked={useMultipleEngines}
+                    onChange={handleUseMultipleEnginesChange}
+                  />
+                  <label htmlFor="useMultipleEngines">Do you want to use multiple engines per tank?</label>
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    When checked, the calculator will use multiple engines with each tank.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {useMultipleEngines && (
+              <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <NumberInput 
+                    value={maxNumEngines}
+                    onChange={setMaxNumEngines}
+                    id="maxNumEngines"
+                    label="Enter the desired tank diameter in meters:"
+                  />
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    The calculator will use up to this many engines on each tank in this stage.
                   </p>
                 </TooltipContent>
               </Tooltip>

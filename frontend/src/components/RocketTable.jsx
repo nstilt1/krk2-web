@@ -109,30 +109,28 @@ export default function RocketTable({ wasmJsonData }) {
 
   const [minWetMass, setMinWetMass] = useLocalStorage("minWetMass", '');
   const [maxWetMass, setMaxWetMass] = useLocalStorage("maxWetMass", '');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    try {
-      debug('Parsing incoming WASM JSON…')
-      const parsed = JSON.parse(wasmJsonData).map((r) => ({
-        engine: r.engine,
-        diameter: r.diameter,
-        wetMass: r.wetMass,
-        dryMass: r.dryMass,
-        deltaVVac: r.deltaVVac,
-        deltaVAsl: r.deltaVAsl,
-        twr: r.twr,
-        num_engines: r.numEngines,
-        cyl_length: r.cylLength ?? 'N/A',
-        cyl_fuselage: r.cylFuselage ?? 'N/A',
-        nose_length: r.noseLength ?? 'N/A',
-        nose_fuselage: r.noseFuselage ?? 'N/A',
-      }))
-      debug(parsed)
-      setData(parsed)
-    } catch (e) {
-      console.error('Error parsing WASM JSON data:', e)
-    }
-  }, [wasmJsonData])
+    if (!wasmJsonData) return;
+
+    const worker = new Worker(new URL('../../public/dataWorker.js', import.meta.url));
+
+    worker.postMessage(wasmJsonData);
+
+    worker.onmessage = (e) => {
+      if (e.data.type === 'success') {
+        console.log(data);
+        setData(e.data.data);
+        console.log(data);
+      } else if (e.data.type === 'error') {
+        console.error('Worker error:', e.data.error);
+        setError(e.data.error);
+      }
+    };
+
+    return () => worker.terminate();
+  }, [wasmJsonData]);
 
   useEffect(() => {
     const min = parseFloat(minWetMass);

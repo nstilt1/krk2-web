@@ -37,6 +37,8 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
   const [noseHeight, setNoseHeight] = useLocalStorage("nose_height", 0.0);
   const [customDiameter, setCustomDiameter] = useLocalStorage("customDiameter", 1.25);
   const [useCustomDiameter, setUseCustomDiameter] = useLocalStorage("useCustomDiameter", false);
+  const [useMultipleEngines, setUseMultipleEngines] = useLocalStorage("useMultipleEngines", false);
+  const [maxNumEngines, setMaxNumEngines] = useLocalStorage("maxNumEngines", 1);
 
   const handleTechNodeSelection = (option) => {
     if (techNodes.includes(option)) {
@@ -84,6 +86,10 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
 
   const handleUseCustomDiameterChange = (event) => {
     setUseCustomDiameter(!useCustomDiameter);
+  }
+
+  const handleUseMultipleEnginesChange = (event) => {
+    setUseMultipleEngines(!useMultipleEngines);
   }
 
   return (
@@ -136,6 +142,10 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
                 setCustomDiameter={setCustomDiameter}
                 handleUseCustomDiameterChange={handleUseCustomDiameterChange}
                 useCustomDiameter={useCustomDiameter}
+                useMultipleEngines={useMultipleEngines}
+                handleUseMultipleEnginesChange={handleUseMultipleEnginesChange}
+                maxNumEngines={maxNumEngines}
+                setMaxNumEngines={setMaxNumEngines}
               />
               </CardContent>
               </Card>
@@ -173,6 +183,10 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
                 setCustomDiameter={setCustomDiameter}
                 handleUseCustomDiameterChange={handleUseCustomDiameterChange}
                 useCustomDiameter={useCustomDiameter}
+                useMultipleEngines={useMultipleEngines}
+                handleUseMultipleEnginesChange={handleUseMultipleEnginesChange}
+                maxNumEngines={maxNumEngines}
+                setMaxNumEngines={setMaxNumEngines}
               />
               </CardContent>
               </Card>

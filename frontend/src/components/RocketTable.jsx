@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -6,7 +6,7 @@ import {
   getSortedRowModel,
   flexRender,
 } from '@tanstack/react-table'
-
+import { useVirtualizer } from '@tanstack/react-virtual'
 import {
   Table,
   TableHeader,
@@ -100,37 +100,32 @@ export default function RocketTable({ wasmJsonData }) {
   const [columnFilters, setColumnFilters] = useState([])
   const [sorting, setSorting] = useState(
     [
-      // 1) Primary sort: diameter (ascending)
-      { id: 'diameter', desc: false },
-      // 2) Secondary sort: deltaVVac (descending)
-      { id: 'deltaVVac', desc: true },
+      // 1) Primary sort: wetMass (ascending)
+      { id: 'wetMass', desc: false },
     ]
   )
 
   const [minWetMass, setMinWetMass] = useLocalStorage("minWetMass", '');
   const [maxWetMass, setMaxWetMass] = useLocalStorage("maxWetMass", '');
-  const [error, setError] = useState(null);
+  const workerRef = useRef(null)
 
   useEffect(() => {
-    if (!wasmJsonData) return;
-
-    const worker = new Worker(new URL('../../public/dataWorker.js', import.meta.url));
-
-    worker.postMessage(wasmJsonData);
-
-    worker.onmessage = (e) => {
+    workerRef.current = new Worker(new URL('../../public/parseWorker.js', import.meta.url))
+    workerRef.current.onmessage = e => {
       if (e.data.type === 'success') {
-        console.log(data);
-        setData(e.data.data);
-        console.log(data);
-      } else if (e.data.type === 'error') {
-        console.error('Worker error:', e.data.error);
-        setError(e.data.error);
+        setData(e.data.data)
+      } else {
+        console.error('Worker parse error:', e.data.error)
       }
-    };
+    }
+    return () => workerRef.current && workerRef.current.terminate()
+  }, []);
 
-    return () => worker.terminate();
-  }, [wasmJsonData]);
+  useEffect(() => {
+    if (wasmJsonData && workerRef.current) {
+      workerRef.current.postMessage(wasmJsonData)
+    }
+  }, [wasmJsonData])
 
   useEffect(() => {
     const min = parseFloat(minWetMass);
@@ -164,14 +159,19 @@ export default function RocketTable({ wasmJsonData }) {
       columnFilters,
       sorting,
     },
+    state: { columnFilters, sorting },
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    enableColumnResizing: true,
+    columnResizeMode: 'onChange',
     // Enable multi-sort so Shift+Click will add a second-level sort
     enableMultiSort: true,
-  })
+  });
+
+  const tableContainerRef = useRef(null)
 
   const allEngines = React.useMemo(() => {
     const setOfEngines = new Set()
@@ -207,7 +207,26 @@ export default function RocketTable({ wasmJsonData }) {
     setMinWetMass('');
     setMaxWetMass('');
   };
+  const leafColumns = table.getAllLeafColumns()
 
+  const allCols = table.getAllLeafColumns()
+  const colWidths = allCols.map(col => `${col.getSize()}px`).join(' ')
+
+  // 2️⃣ Virtualizer setup
+  const parentRef = useRef(null)
+  const rowVirtualizer = useVirtualizer({
+    count: table.getRowModel().rows.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 40,
+  })
+
+  const colgroup = (
+    <colgroup>
+      {leafColumns.map(col => (
+        <col key={col.id} style={{ width: `${col.getSize()}px` }} />
+      ))}
+    </colgroup>
+  )
 
   return (
     <div className="space-y-4">
@@ -316,46 +335,80 @@ export default function RocketTable({ wasmJsonData }) {
         Reset Filters
       </button>
 
+      <div ref={tableContainerRef} style={{ height: 600, overflow: 'auto' }}>
+  {/* ─── Header as Grid ─────────────────────────── */}
+      <div
+        className="grid items-center bg-gray-50 border-b"
+        style={{ gridTemplateColumns: colWidths }}
+      >
+        {table.getHeaderGroups()[0].headers.map(header => (
+          <div
+            key={header.id}
+            className="relative px-2 py-1 truncate cursor-pointer"
+            onClick={header.column.getToggleSortingHandler()}
+          >
+            <div className="truncate">
+              {flexRender(header.column.columnDef.header, header.getContext())}
+              {{
+                asc: ' 🔼',
+                desc: ' 🔽',
+              }[header.column.getIsSorted()] ?? null}
+            </div>
+            {header.column.getCanResize() && (
+              <div
+                onMouseDown={header.getResizeHandler()}
+                onTouchStart={header.getResizeHandler()}
+                className="absolute right-0 top-0 h-full w-1 bg-gray-200 hover:bg-gray-400 cursor-col-resize"
+              />
+            )}
+          </div>
+        ))}
+      </div>
 
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead
-                  key={header.id}
-                  onClick={header.column.getToggleSortingHandler()}
-                  className="cursor-pointer select-none"
-                >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                  {{
-                    asc: ' 🔼',
-                    desc: ' 🔽',
-                  }[header.column.getIsSorted()] ?? null}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-
-        <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(
-                    cell.column.columnDef.cell,
-                    cell.getContext()
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      {/* ─── Body with Virtualized Grid Rows ─────────── */}
+      <div
+        ref={parentRef}
+        className="overflow-y-auto"
+        style={{ height: 600 }}
+      >
+        <div style={{ position: 'relative', height: rowVirtualizer.getTotalSize() }}>
+          {rowVirtualizer.getVirtualItems().map(virtualRow => {
+            const row = table.getRowModel().rows[virtualRow.index]
+            return (
+              <div
+                key={row.id}
+                className="grid items-center border-b"
+                style={{
+                  gridTemplateColumns: colWidths,
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                {row.getVisibleCells().map(cell => (
+                  <div
+                    key={cell.id}
+                    className="px-2 py-1"
+                  >
+                    <div
+                      className="truncate"
+                      style={{
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
+          })}
+        </div>
+      </div>
     </div>
+  </div>
   )
 }

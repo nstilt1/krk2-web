@@ -14,6 +14,19 @@ self.onmessage = (e) => {
       cyl_fuselage: r.cylFuselage ?? 'N/A',
       nose_length:  r.noseLength  ?? 'N/A',
       nose_fuselage:r.noseFuselage?? 'N/A',
+      max_altitude: r.maxAltitude,
+
+      // extra fields for the engine
+      burnTime:     r.burnTime,
+      ullage:       r.ullage ? "True" : "False",
+      hpFuel:       r.hpFuel ? "True" : "False",
+      tech:         r.tech,
+      ignitions:    r.ignitions,
+      gimbal:       r.gimbal ? "True" : "False",
+      minThrust:    r.minThrust,
+      residuals:    r.residuals,
+      engineMass:   r.engineMass,
+      fuel:         r.fuel,
     }))
     postMessage({ type: 'success', data: mapped })
   } catch (error) {

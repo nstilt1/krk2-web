@@ -19,6 +19,13 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { debug } from '@/lib/utils'
 import useLocalStorage from '@/hooks/useLocalStorage'
 
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from '@/components/ui/tooltip'
+
 const filterFns = {
   wetMassRange: (row, columnId, filterValue) => {
     const wetMass = row.getValue(columnId);
@@ -34,6 +41,41 @@ export const columns = [
     accessorKey: 'engine',
     header: 'Engine',
     filterFn: 'equalsString',
+    cell: ({ row, getValue }) => {
+      const name = getValue();
+      const burnTime = row.original.burnTime;
+      const ullage = row.original.ullage;
+      const hpFuel = row.original.hpFuel;
+      const tech = row.original.tech;
+      const ignitions = row.original.ignitions;
+      const gimbal = row.original.gimbal;
+      const minThrust = row.original.minThrust;
+      const residuals = row.original.residuals;
+      const mass = row.original.engineMass;
+      const fuel = row.original.fuel;
+
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild className="w-full text-left"><div>
+              <span className='underline cursor-pointer'>{name}</span>
+            </div></TooltipTrigger>
+            <TooltipContent>
+              <p className="text-lg max-w-md"><strong>Burn Time: </strong>{burnTime}</p>
+              <p className="text-lg max-w-md"><strong>Ullage: </strong>{ullage}</p>
+              <p className="text-lg max-w-md"><strong>HP Fuel: </strong>{hpFuel}</p>
+              <p className="text-lg max-w-md"><strong>Tech required: </strong>{tech}</p>
+              <p className="text-lg max-w-md"><strong># Ignitions: </strong>{ignitions}</p>
+              <p className="text-lg max-w-md"><strong>Gimbal: </strong>{gimbal}</p>
+              <p className="text-lg max-w-md"><strong>Minimum Throttle: </strong>{minThrust}</p>
+              <p className="text-lg max-w-md"><strong>Residuals: </strong>{residuals}%</p>
+              <p className="text-lg max-w-md"><strong>Mass: </strong>{mass}</p>
+              <p className="text-lg max-w-md"><strong>Fuel: </strong>{fuel}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
+    }
   },
   {
     accessorKey: 'diameter',
@@ -93,6 +135,10 @@ export const columns = [
     accessorKey: 'nose_fuselage',
     header: 'Nose Fuselage',
   },
+  {
+    accessorKey: 'max_altitude',
+    header: 'Max Altitude',
+  }
 ]
 
 export default function RocketTable({ wasmJsonData }) {
@@ -335,6 +381,17 @@ export default function RocketTable({ wasmJsonData }) {
         Reset Filters
       </button>
 
+      <button
+        onClick={() => {
+          if (parentRef.current) {
+            parentRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+          }
+        }}
+        className="mb-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Scroll to Top
+      </button>
+
       <div ref={tableContainerRef} style={{ height: 600, overflow: 'auto' }}>
   {/* ─── Header as Grid ─────────────────────────── */}
       <div
@@ -344,7 +401,7 @@ export default function RocketTable({ wasmJsonData }) {
         {table.getHeaderGroups()[0].headers.map(header => (
           <div
             key={header.id}
-            className="relative px-2 py-1 truncate cursor-pointer"
+            className="relative px-2 py-1 truncate cursor-pointer select-none"
             onClick={header.column.getToggleSortingHandler()}
           >
             <div className="truncate">
@@ -356,9 +413,12 @@ export default function RocketTable({ wasmJsonData }) {
             </div>
             {header.column.getCanResize() && (
               <div
-                onMouseDown={header.getResizeHandler()}
-                onTouchStart={header.getResizeHandler()}
-                className="absolute right-0 top-0 h-full w-1 bg-gray-200 hover:bg-gray-400 cursor-col-resize"
+                onPointerDown={e => {
+                  e.stopPropagation()
+                  header.getResizeHandler()(e)
+                }}
+                onClick={e => e.stopPropagation()}
+                className="absolute right-0 top-0 h-full w-2 bg-gray-200 hover:bg-gray-400 cursor-col-resize"
               />
             )}
           </div>

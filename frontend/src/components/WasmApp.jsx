@@ -39,6 +39,7 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
   const [useCustomDiameter, setUseCustomDiameter] = useLocalStorage("useCustomDiameter", false);
   const [useMultipleEngines, setUseMultipleEngines] = useLocalStorage("useMultipleEngines", false);
   const [maxNumEngines, setMaxNumEngines] = useLocalStorage("maxNumEngines", 1);
+  const [maxNumTanks, setMaxNumTanks] = useLocalStorage("maxNumTanks", 1);
 
   const handleTechNodeSelection = (option) => {
     if (techNodes.includes(option)) {
@@ -71,6 +72,7 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
    "2009-2013 Orbital Rocketry",
    "2014-2018 ORSC Engines",
    "2014-2018 Orbital Rocketry",
+   "2019-2028 ORSC Engines",
    "2019-2028 Orbital Rocketry",
   ];
 
@@ -146,6 +148,8 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
                 handleUseMultipleEnginesChange={handleUseMultipleEnginesChange}
                 maxNumEngines={maxNumEngines}
                 setMaxNumEngines={setMaxNumEngines}
+                maxNumTanks={maxNumTanks}
+                setMaxNumTanks={setMaxNumTanks}
               />
               </CardContent>
               </Card>
@@ -187,6 +191,8 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
                 handleUseMultipleEnginesChange={handleUseMultipleEnginesChange}
                 maxNumEngines={maxNumEngines}
                 setMaxNumEngines={setMaxNumEngines}
+                maxNumTanks={maxNumTanks}
+                setMaxNumTanks={setMaxNumTanks}
               />
               </CardContent>
               </Card>

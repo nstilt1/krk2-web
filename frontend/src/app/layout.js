@@ -13,8 +13,8 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "Midi Machine",
-  description: "The Midi Machine, presented by Altered Brain Chemistry.",
+  title: "KRK - Kerbal Rocket Kalculator Realism Overhaul",
+  description: "KRK, presented by Altered Brain Chemistry.",
 };
 
 export default function RootLayout({ children }) {

@@ -115,7 +115,7 @@ const CheatSheet = ({
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="w-[95vw]">
             
             <TooltipProvider>
               <Tooltip>
@@ -371,10 +371,10 @@ const CheatSheet = ({
           </TooltipProvider>
                 
             <Button type="submit">Get Rockets</Button>
+            </form>
             {result && <div>
                 <RocketTable wasmJsonData={result} />
             </div>}
-            </form>
         </div>
     );
 }

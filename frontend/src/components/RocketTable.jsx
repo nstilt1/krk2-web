@@ -138,6 +138,10 @@ export const columns = [
   {
     accessorKey: 'max_altitude',
     header: 'Max Altitude',
+  },
+  {
+    accessorKey: 'max_velocity',
+    header: 'Max Velocity',
   }
 ]
 

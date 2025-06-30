@@ -158,7 +158,7 @@ const Calculate = ({
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="w-[95vw]">
         <div>
         <div>
           <div>

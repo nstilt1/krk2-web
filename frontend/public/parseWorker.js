@@ -15,6 +15,7 @@ self.onmessage = (e) => {
       nose_length:  r.noseLength  ?? 'N/A',
       nose_fuselage:r.noseFuselage?? 'N/A',
       max_altitude: r.maxAltitude,
+      max_velocity: r.maxVelocity,
 
       // extra fields for the engine
       burnTime:     r.burnTime,

@@ -50,6 +50,14 @@ const Calculate = ({
   setCustomDiameter,
   handleUseCustomDiameterChange,
   useCustomDiameter,
+  extraFuelPercentage,
+  setExtraFuelPercentage,
+  useMultipleEngines,
+  handleUseMultipleEnginesChange,
+  maxNumEngines,
+  setMaxNumEngines,
+  maxNumTanks,
+  setMaxNumTanks,
 }) => {
 
   const [result, setResult] = useState(null);
@@ -129,12 +137,15 @@ const Calculate = ({
         inVacuum, 
         needsGimballing, 
         useNosecone,
-        diameter,
         fuselages,
         techNodes,
         noseHeight,
         useCustomDiameter,
         customDiameter,
+        extraFuelPercentage,
+        useMultipleEngines,
+        maxNumEngines,
+        maxNumTanks,
       );
       console.timeEnd("calculate");
       
@@ -147,7 +158,7 @@ const Calculate = ({
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="w-[95vw]">
         <div>
         <div>
           <div>
@@ -185,25 +196,6 @@ const Calculate = ({
                 </TooltipContent>
               </Tooltip>
               </TooltipProvider>
-            {useNosecone && (
-              <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild className="w-full text-left"><div>
-                  <NumberInput 
-                    value={noseHeight}
-                    onChange={setNoseHeight}
-                    id="noseHeight"
-                    label="Enter the nosecone's height in meters:"
-                  />
-                </div></TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-lg max-w-md">
-                    The nosecone height for this stage.
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            )}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild className="w-full text-left"><div>
@@ -242,15 +234,32 @@ const Calculate = ({
               <Tooltip>
                 <TooltipTrigger asChild className="w-full text-left"><div>
                   <NumberInput 
-                    value={diameter}
-                    onChange={setDiameter}
-                    id="diameter"
-                    label="Enter the desired diameter for this stage:"
+                    value={maxNumTanks}
+                    onChange={setMaxNumTanks}
+                    id="maxNumTanks"
+                    label="Enter the max number of tanks to use with this stage:"
                   />
                 </div></TooltipTrigger>
                 <TooltipContent>
                   <p className="text-lg max-w-md">
-                    The diameter of the parts that should be used in this stage.
+                    The calculator will use up to this many tanks with this stage.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <NumberInput 
+                    value={extraFuelPercentage}
+                    onChange={setExtraFuelPercentage}
+                    id="extraFuel"
+                    label="Enter how much extra fuel should be added to the rated burn time (%):"
+                  />
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    The calculator will use this many percent of fuel above or below the rated burn time.
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -264,7 +273,7 @@ const Calculate = ({
                     checked={useCustomDiameter}
                     onChange={handleUseCustomDiameterChange}
                   />
-                  <label htmlFor="useNosecone">Do you want to use a custom payload/tank diameter?</label>
+                  <label htmlFor="useCustomDiameter">Do you want to use a custom payload/tank diameter?</label>
                 </div></TooltipTrigger>
                 <TooltipContent>
                   <p className="text-lg max-w-md">
@@ -287,6 +296,43 @@ const Calculate = ({
                 <TooltipContent>
                   <p className="text-lg max-w-md">
                     The calculator will use this diameter for the tanks in this stage.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            )}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <input 
+                    type="checkbox"
+                    id="useMultipleEngines"
+                    checked={useMultipleEngines}
+                    onChange={handleUseMultipleEnginesChange}
+                  />
+                  <label htmlFor="useMultipleEngines">Do you want to use multiple engines per tank?</label>
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    When checked, the calculator will use multiple engines with each tank.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {useMultipleEngines && (
+              <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <NumberInput 
+                    value={maxNumEngines}
+                    onChange={setMaxNumEngines}
+                    id="maxNumEngines"
+                    label="Enter the maximum amount of engines to use per tank:"
+                  />
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    The calculator will use up to this many engines on each tank in this stage.
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -348,6 +394,25 @@ const Calculate = ({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
+            {useNosecone && (
+              <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <NumberInput 
+                    value={noseHeight}
+                    onChange={setNoseHeight}
+                    id="noseHeight"
+                    label="Enter the nosecone's height in meters:"
+                  />
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    The nosecone height for this stage.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            )}
             </div>
           </div>
           <TooltipProvider>

@@ -51,6 +51,12 @@ const CheatSheet = ({
     setCustomDiameter,
     handleUseCustomDiameterChange,
     useCustomDiameter,
+    useMultipleEngines,
+    handleUseMultipleEnginesChange,
+    maxNumEngines,
+    setMaxNumEngines,
+    maxNumTanks,
+    setMaxNumTanks,
 }) => {
     const [result, setResult] = useState(null);
 
@@ -92,6 +98,9 @@ const CheatSheet = ({
                 noseHeight,
                 useCustomDiameter,
                 customDiameter,
+                useMultipleEngines,
+                maxNumEngines,
+                maxNumTanks,
             );
             console.timeEnd("rocket_table");
             debug("json = " + json);
@@ -106,7 +115,7 @@ const CheatSheet = ({
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="w-[95vw]">
             
             <TooltipProvider>
               <Tooltip>
@@ -159,25 +168,23 @@ const CheatSheet = ({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            {useNosecone && (
-              <TooltipProvider>
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild className="w-full text-left"><div>
                   <NumberInput 
-                    value={noseHeight}
-                    onChange={setNoseHeight}
-                    id="noseHeight"
-                    label="Enter the nosecone height in meters:"
+                    value={maxNumTanks}
+                    onChange={setMaxNumTanks}
+                    id="maxNumTanks"
+                    label="Enter the max number of tanks to use with this stage:"
                   />
                 </div></TooltipTrigger>
                 <TooltipContent>
                   <p className="text-lg max-w-md">
-                    The calculator will use this height for nosecones in this stage.
+                    The calculator will use up to this many tanks with this stage.
                   </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            )}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild className="w-full text-left"><div>
@@ -234,6 +241,25 @@ const CheatSheet = ({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
+            {useNosecone && (
+              <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <NumberInput 
+                    value={noseHeight}
+                    onChange={setNoseHeight}
+                    id="noseHeight"
+                    label="Enter the nosecone height in meters:"
+                  />
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    The calculator will use this height for nosecones in this stage.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            )}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild className="w-full text-left"><div>
@@ -271,7 +297,44 @@ const CheatSheet = ({
               </Tooltip>
             </TooltipProvider>
             )}
-                      <TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <input 
+                    type="checkbox"
+                    id="useMultipleEngines"
+                    checked={useMultipleEngines}
+                    onChange={handleUseMultipleEnginesChange}
+                  />
+                  <label htmlFor="useMultipleEngines">Do you want to use multiple engines per tank?</label>
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    When checked, the calculator will use multiple engines with each tank.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {useMultipleEngines && (
+              <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="w-full text-left"><div>
+                  <NumberInput 
+                    value={maxNumEngines}
+                    onChange={setMaxNumEngines}
+                    id="maxNumEngines"
+                    label="Enter the maximum amount of engines to use per tank:"
+                  />
+                </div></TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-lg max-w-md">
+                    The calculator will use up to this many engines on each tank in this stage.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            )}
+            <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild className="w-full text-left"><div>
                 <MultiSelect
@@ -308,10 +371,10 @@ const CheatSheet = ({
           </TooltipProvider>
                 
             <Button type="submit">Get Rockets</Button>
+            </form>
             {result && <div>
                 <RocketTable wasmJsonData={result} />
             </div>}
-            </form>
         </div>
     );
 }

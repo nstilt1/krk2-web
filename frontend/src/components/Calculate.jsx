@@ -158,7 +158,7 @@ const Calculate = ({
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="w-[95vw]">
+      <form onSubmit={handleSubmit} className="w-[min(400px,95vw)]">
         <div>
         <div>
           <div>

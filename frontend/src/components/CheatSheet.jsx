@@ -115,7 +115,7 @@ const CheatSheet = ({
 
     return (
         <div>
-            <form onSubmit={handleSubmit} className="w-[95vw]">
+            <form onSubmit={handleSubmit} className="w-[min(400px,95vw)]">
             
             <TooltipProvider>
               <Tooltip>

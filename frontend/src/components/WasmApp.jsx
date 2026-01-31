@@ -98,18 +98,25 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
     <div>
       {wasmModule ? 
         <div>
-          <Tabs defaultValue="calculator">
+          <Tabs defaultValue="calculator" className='w-full'>
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="calculator">Calculator</TabsTrigger>
-              <TabsTrigger value="cheat-sheet">Rocket Tables</TabsTrigger>
+              <TabsTrigger value="calculator">Calculator (target &Delta;v)</TabsTrigger>
+              <TabsTrigger value="cheat-sheet">Rocket Tables (target TWR) </TabsTrigger>
               {/* <TabsTrigger value="chord-finder">Chord Finder</TabsTrigger> */}
             </TabsList>
-            <TabsContent value="calculator">
+            <TabsContent value="calculator" className="w-full">
               <Card>
                 <CardHeader>
                   <CardTitle>KSP Realism Overhaul Rocket Calculator</CardTitle>
                 </CardHeader>
                 <CardContent>
+                  <p className="w-[min(400px,95vw)] break-words whitespace-normal">
+                    Use this calculator to generate a table with stage configurations 
+                  that are engineered to reach the supplied target &Delta;v.
+
+                  Configurations with TWRs that are higher than the allowed target TWR 
+                  will not be shown.
+                  </p>
               <Calculate
                 wasmModule={wasmModule}
                 showExtraControls={showExtraControls}
@@ -157,9 +164,18 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
             <TabsContent value="cheat-sheet">
               <Card>
                 <CardHeader>
-                  <CardTitle>Rocket Tables</CardTitle>
+                  <CardTitle>Rocket Tables (target TWR)</CardTitle>
                 </CardHeader>
                 <CardContent>
+
+                  <p className='w-[min(400px,95vw)]'>
+                    Instead of using a target &Delta;v, this calculator 
+                    finds the maximum &Delta;v that can be achieved with 
+                    your unlocked rocket engines. It does this by aiming 
+                    for a target minimum TWR. Adding more fuel decreases the 
+                    TWR, so it adds as much fuel as possible trying to reach the target. If 
+                    the engine&apos;s rated burn time is reached, it will stop there for that engine.
+                  </p>
               <CheatSheet
                 wasmModule={wasmModule}
                 mass={mass}
